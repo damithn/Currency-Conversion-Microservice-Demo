@@ -1,16 +1,13 @@
 package com.damithtech.microservices.currencyconversionservice.controller;
 
+import com.damithtech.microservices.currencyconversionservice.CurrencyExchangeServiceProxy;
 import com.damithtech.microservices.currencyconversionservice.model.CurrencyConversionBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author DAMITH SAMARAKOON on 6/14/2020
@@ -20,6 +17,8 @@ public class CurrencyConversionCotroller {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private CurrencyExchangeServiceProxy proxy;
 
     @Bean
     public RestTemplate restTemplate() {
@@ -30,17 +29,21 @@ public class CurrencyConversionCotroller {
     public CurrencyConversionBean convertCurrency(@PathVariable String from,
                                                   @PathVariable String to,
                                                   @PathVariable String quantity) {
+//
+//        Map<String, String> uriVariables = new HashMap<>();
+//        uriVariables.put("from",from);
+//        uriVariables.put("to",to);
+//
+//        ResponseEntity<CurrencyConversionBean>  responseEntity=restTemplate.getForEntity
+//        ("http://localhost:8000/currency-exchange/form/{from}/to/{to}",
+//                                                 CurrencyConversionBean.class, uriVariables);
 
-        Map<String, String> uriVariables = new HashMap<>();
-        uriVariables.put("from",from);
-        uriVariables.put("to",to);
+        CurrencyConversionBean response = proxy.convertCurrency(from, to);
 
-        ResponseEntity<CurrencyConversionBean>  responseEntity=restTemplate.getForEntity("http://localhost:8000/currency-exchange/form/{from}/to/{to}",
-                                                 CurrencyConversionBean.class, uriVariables);
+//                responseEntity.getBody();
 
-        CurrencyConversionBean response = responseEntity.getBody();
-
-        return new CurrencyConversionBean(response.getId(), from, to, response.getConversionMultiple(), quantity, quantity,response.getPort());
+        return new CurrencyConversionBean(response.getId(), from, to, response.getConversionMultiple(), quantity,
+                                          quantity, response.getPort());
 
     }
 }

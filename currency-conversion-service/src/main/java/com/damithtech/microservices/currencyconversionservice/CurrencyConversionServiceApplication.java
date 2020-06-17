@@ -2,7 +2,10 @@ package com.damithtech.microservices.currencyconversionservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
+
+@EnableFeignClients("com.damithtech.microservices.currencyconversionservice")
 @SpringBootApplication
 public class CurrencyConversionServiceApplication {
 
